@@ -1,0 +1,16 @@
+{
+  "name": "engine",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@roots/bud": "^4.7.0-9",
+    "@roots/bud-babel": "^4.7.0-9",
+    "@roots/bud-cli": "^4.7.0-9",
+    "@roots/bud-typescript": "^4.7.0-9",
+    "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "build": "yarn bud build"
+  }
+}
