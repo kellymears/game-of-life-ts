@@ -14,7 +14,7 @@ export class Life {
   public constructor(el: HTMLElement, params: any) {
     this.main = this.main.bind(this);
 
-    this.scale = 1 / params.get("scale");
+    this.scale = 1 / (params.get("scale") ?? 0.2);
     this.target = document.createElement("canvas");
     this.target.width = el.offsetWidth;
     this.target.height = el.offsetHeight;
