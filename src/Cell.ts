@@ -21,7 +21,15 @@ export class Cell {
   public x: number = 0;
   public y: number = 0;
 
-  public scale: number = 10;
+  public box: {
+    x: number;
+    y: number;
+    scale: number;
+  } = {
+    x: 0,
+    y: 0,
+    scale: 0,
+  };
 
   public group: number = 0;
   public color: {
@@ -36,11 +44,10 @@ export class Cell {
 
   public neighbors: Cell[] = [];
 
-  public constructor([x, y]: Coordinate, scale?: number, group?: number) {
+  public constructor([x, y]: Coordinate, group?: number) {
     this.x = x;
     this.y = y;
 
-    if (scale) this.scale = scale;
     if (group) this.group = group;
 
     this.alive = Math.random() > 0.5 ? STATE.ALIVE : STATE.DEAD;
@@ -49,10 +56,12 @@ export class Cell {
   public load(life: Life) {
     if (!life.context) return;
 
-    const colors = [
-      255 * ((this.x * this.scale) / life.context.canvas.width),
-      255 * ((this.y * this.scale) / life.context.canvas.height),
-    ];
+    this.box.scale = life.scale;
+
+    this.box.x = this.x * this.box.scale;
+    this.box.y = this.y * this.box.scale;
+
+    const colors = [255 * (this.x / life.width), 255 * (this.y / life.height)];
 
     this.color = {
       r: this.group == 1 ? colors[0] : colors[1],
@@ -109,34 +118,30 @@ export class Cell {
       default:
         this.next = STATE.DEAD;
     }
+
+    return this;
   }
 
-  public render(ctx: CanvasRenderingContext2D) {
-    if (this.alive == this.next) return;
-    this.next ? this.draw(ctx) : this.clear(ctx);
+  public render(ctx: CanvasRenderingContext2D): Cell {
+    if (this.alive == this.next) return this;
+    return this.next ? this.draw(ctx) : this.clear(ctx);
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 1)`;
+    ctx.fillStyle = `rgb(${this.color.r}, ${this.color.g}, ${this.color.b})`;
+    ctx.fillRect(this.box.x, this.box.y, this.box.scale, this.box.scale);
 
-    ctx.fillRect(
-      this.x * this.scale,
-      this.y * this.scale,
-      this.scale,
-      this.scale
-    );
+    return this;
   }
 
   public clear(ctx: CanvasRenderingContext2D) {
-    ctx.clearRect(
-      this.x * this.scale,
-      this.y * this.scale,
-      this.scale,
-      this.scale
-    );
+    ctx.clearRect(this.box.x, this.box.y, this.box.scale, this.box.scale);
+
+    return this;
   }
 
   public step() {
     this.alive = this.next;
+    return this;
   }
 }
