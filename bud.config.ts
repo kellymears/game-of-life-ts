@@ -1,9 +1,3 @@
-import type { Framework } from "@roots/bud";
+import { bud } from "@roots/bud";
 
-export default (bud: Framework) =>
-  bud
-    .use([require("@roots/bud-babel"), require("@roots/bud-typescript")])
-    .entry("main", ["index.{css,ts}"])
-    .template({
-      template: "src/index.html",
-    });
+bud.html("src/index.html").minimize();
