@@ -1,3 +1,11 @@
 import { bud } from "@roots/bud";
 
-bud.html("src/index.html").minimize();
+bud
+  .html({
+    replace: {
+      APP_DESCRIPTION: "Game of Life in TypeScript",
+    },
+    template: "src/index.html",
+  })
+  .minimize()
+  .runtime(false);

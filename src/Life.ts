@@ -1,5 +1,9 @@
 import { Cell } from "./Cell";
 
+interface Options {
+  scale: number;
+}
+
 export class Life {
   public width: number;
   public height: number;
@@ -8,16 +12,16 @@ export class Life {
   public context: CanvasRenderingContext2D | null;
   public cells: Map<string, Cell> = new Map();
 
-  public params: any;
   public scale: number = 5;
 
-  public constructor(el: HTMLElement, params: any) {
+  public constructor(element: HTMLElement, public options?: Options) {
     this.main = this.main.bind(this);
 
-    this.scale = 1 / (params.get("scale") ?? 0.2);
+    this.scale = 1 / options.scale;
+
     this.target = document.createElement("canvas");
-    this.target.width = el.offsetWidth;
-    this.target.height = el.offsetHeight;
+    this.target.width = element.offsetWidth;
+    this.target.height = element.offsetHeight;
 
     this.context = this.target.getContext("2d");
 
@@ -26,7 +30,7 @@ export class Life {
       this.context.fillRect(0, 0, this.target.width, this.target.height);
     }
 
-    el.appendChild(this.target);
+    element.appendChild(this.target);
 
     this.width = this.target.width / this.scale;
     this.height = this.target.height / this.scale;
